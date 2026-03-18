@@ -10,11 +10,8 @@ spec:
       nodeName: raspberrypi
       containers:
       - name: deepbench
-        image: mengxue12/deepbench-arm:0.2
+        image: mengxue12/deepbench-arm:0.3
         imagePullPolicy: IfNotPresent
-        env:
-          - name: LD_LIBRARY_PATH
-            value: "/app/ComputeLibrary-main/build"
         command: ["/bin/bash", "-c"]
         args:
           - |
@@ -33,7 +30,6 @@ spec:
             sleep 30
             echo "Benchmarking Convolution..."
             if [ -f ./bin/conv_bench ]; then
-              # LD_LIBRARY_PATH=/app/ComputeLibrary-main/build:$LD_LIBRARY_PATH ./bin/conv_bench
               ./bin/conv_bench
             fi
             echo "Benchmark completed!"
