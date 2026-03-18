@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: deepbench-arm-job
+spec:
+  ttlSecondsAfterFinished: 3600  # clean Job after 1h
+  backoffLimit: 3
+  template:
+    spec:
+      nodeName: raspberrypi
+      containers:
+      - name: deepbench
+        image: mengxue12/deepbench-arm:0.2
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: LD_LIBRARY_PATH
+            value: "/app/ComputeLibrary-main/build"
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            echo "Starting DeepBench..."
+            echo "start at $(date '+%Y-%m-%d %H:%M:%S')"
+            sleep 30
+            echo "Benchmarking GEMM..."
+            if [ -f ./bin/gemm_bench ]; then
+              ./bin/gemm_bench
+            fi
+            sleep 30
+            echo "Benchmarking Sparse GEMM..."
+            if [ -f ./bin/sparse_bench ]; then
+              ./bin/sparse_bench
+            fi
+            sleep 30
+            echo "Benchmarking Convolution..."
+            if [ -f ./bin/conv_bench ]; then
+              # LD_LIBRARY_PATH=/app/ComputeLibrary-main/build:$LD_LIBRARY_PATH ./bin/conv_bench
+              ./bin/conv_bench
+            fi
+            echo "Benchmark completed!"
+            sleep 30
+            echo "end at $(date '+%Y-%m-%d %H:%M:%S')"
+        # resources:
+        #   requests:
+        #     memory: "256Mi"
+        #     cpu: "500m"
+        #   limits:
+        #     memory: "1Gi"
+        #     cpu: "2000m"
+      restartPolicy: Never
