@@ -14,14 +14,11 @@ COPY . /app
 WORKDIR /app
 
 # env
-ENV EIGEN_PATH=/usr/include/eigen3
-ENV ARM_COMPUTE_INCLUDE_PATH=ComputeLibrary-main
-ENV ARM_COMPUTE_LIB_PATH=ComputeLibrary-main
-# ENV LD_LIBRARY_PATH=ComputeLibrary-main/build:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/app/ComputeLibrary/build:$LD_LIBRARY_PATH
 
 # build
 # RUN make gemm
 # RUN make sparse
 
 # run
-CMD ["./bin/gemm_bench", "./bin/sparse_bench"]
+CMD ["./bin/gemm_bench"]
