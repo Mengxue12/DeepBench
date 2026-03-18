@@ -1,0 +1,27 @@
+FROM arm64v8/ubuntu:22.04
+
+# install dependencies
+RUN apt-get update && apt-get install -y \
+    g++ \
+    make \
+    libeigen3-dev \
+    git \
+    scons \
+    && rm -rf /var/lib/apt/lists/*
+
+# copy code
+COPY . /app
+WORKDIR /app
+
+# env
+ENV EIGEN_PATH=/usr/include/eigen3
+ENV ARM_COMPUTE_INCLUDE_PATH=ComputeLibrary-main
+ENV ARM_COMPUTE_LIB_PATH=ComputeLibrary-main
+# ENV LD_LIBRARY_PATH=ComputeLibrary-main/build:$LD_LIBRARY_PATH
+
+# build
+# RUN make gemm
+# RUN make sparse
+
+# run
+CMD ["./bin/gemm_bench", "./bin/sparse_bench"]
